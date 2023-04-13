@@ -25,17 +25,12 @@ dependencies {
 
 	//test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
+	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:4.6.2'//Dependency used to write integration test
 	testImplementation 'io.projectreactor:reactor-test'
-}
-
-dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 sourceSets{
 	test {
-		java.srcDirs = ['src/test/java/unit', 'src/test/java/intg']
+		java.srcDirs = ['src/test/java/moviesreviewservice/unit', 'src/test/java/moviesreviewservice/intg']
 	}
 }
 tasks.named('test') {
