@@ -60,7 +60,6 @@ class ReviewsIntgTest {
           assert saveReview != null;
           assert saveReview.getReviewId() != null;
         });
-    //then
   }
 
   @Test
