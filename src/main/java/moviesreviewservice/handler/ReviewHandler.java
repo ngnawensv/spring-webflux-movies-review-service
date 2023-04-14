@@ -2,10 +2,12 @@ package moviesreviewservice.handler;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
+import java.lang.module.ResolutionException;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import moviesreviewservice.domain.Review;
 import moviesreviewservice.exeception.ReviewDataException;
+import moviesreviewservice.exeception.ReviewNotFoundException;
 import moviesreviewservice.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -62,6 +64,7 @@ public class ReviewHandler {
   public Mono<ServerResponse> updateReview(ServerRequest request) {
     var reviewId=request.pathVariable("id");
     var existingReview= reviewRepository.findById(reviewId);
+       // .switchIfEmpty(Mono.error(new ReviewNotFoundException("Review not found for the given id "+reviewId))); //aproach 1 to throw a not found exception
    return existingReview
         .flatMap(review -> request.bodyToMono(Review.class)
             .map(reqReview -> {
@@ -71,7 +74,8 @@ public class ReviewHandler {
             })
             .flatMap(reviewRepository::save)
             .flatMap(saveReview ->ServerResponse.ok().bodyValue(saveReview))
-        );
+        )
+       .switchIfEmpty(ServerResponse.notFound().build()); ////aproach 2 to throw a not found exception. this approach can provides the  customize message
   }
 
   public Mono<ServerResponse> deleteReview(ServerRequest request) {
